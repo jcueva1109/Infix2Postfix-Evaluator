@@ -9,17 +9,19 @@ using namespace std;
 struct Nodo {
 
 	string dato;
-	Nodo* siguiente = nullptr;	//Feature de C++11
+	Nodo* siguiente;	//Feature de C++11
+		
+	Nodo() : siguiente(nullptr) {}	//Feature de C++11
 
 };
 
 //Feature de C++14
 template <class T>
-constexpr T pi = T(3.1415926535897932385L);	
+constexpr T pi = T(3.14'159'265'358'979'323'85L);		//Feature de C++14
 
 //Feature de C++14
 template <class J>
-constexpr J e = J(2.718281828459045235360);
+constexpr J e = J(2.718'281'828'459'045'235'360);		//Feature de C++14
 
 Nodo* pila = nullptr;			//Feature de C++11
 string* arreglo;
@@ -243,6 +245,7 @@ void Validaciones() {
 
 		}
 		else {
+
 			if (checkInput(arreglo[i]) == true) {
 				error3 = true;
 			}
@@ -276,10 +279,10 @@ void Validaciones() {
 		error404 = true;
 	}
 
-	if (error4 == true) {
+	/*if (error4 == true) {
 		cout << "No puedes realizar estar operacion con puntos flotantes!" << endl;
 		error404 = true;
-	}
+	}*/
 
 	if (izquierdo > derecho) {
 		cout << "Olvidaste cerrar el parentesis izquierdo '('!" << endl;
@@ -309,13 +312,14 @@ void expresionesPostfijas() {
 		if (arreglo[i] == ")") {
 
 			do {
+
 				holi.push_back(sacarPila(pila, arreglo[i]));
 				omitir[i] = sacarPila(pila, arreglo[i]);
 				break;
+
 			} while (arreglo[i] != "(");
 
 		}
-
 	}
 
 	//Vaciamos la pila
@@ -481,11 +485,12 @@ double String2int(string x, string y, int operacion) {
 
 string int2String(double n) {
 
-	auto s = to_string(n);		
+	string s = string();		//Feature de C++11
+	s = to_string(n);		
 	return s;
 }
 
-//Feature de C++14
+//Feature de C++14 Lambda Function
 auto int2String2 = [](int n) {
 
 	auto s = to_string(n);
@@ -531,9 +536,9 @@ bool checkMod(int x, double y) {
 			cout << "8. 1000/500" << endl;			//funciona
 			cout << "9. 500 - 400 + 100" << endl;	//funciona
 			cout << "10. 100 / 0" << endl;			//no funciona
-			cout << "11. pi(15)^2" << endl;
-			cout << "12. e			<< endl;
-			cout << "13. Caracter Invalido
+			cout << "11. pi(15)^2" << endl;			//funciona
+			cout << "12. e			<< endl;		//funciona
+			cout << "13. Caracter Invalido			//no funciona
 */
 
 void testCase1() {
@@ -555,7 +560,7 @@ void testCase1() {
 	//Validamos el arreglo
 	Validaciones();
 	expresionesPostfijas();
-	expected = "16";
+	expected = "16.000000";
 	evaluarPostfijas();
 }
 
@@ -573,7 +578,7 @@ void testCase2() {
 	//Validamos el arreglo
 	//Validaciones();
 	expresionesPostfijas();
-	expected = "7";
+	expected = "7.000000";
 	evaluarPostfijas();
 
 }
@@ -593,7 +598,7 @@ void testCase3() {
 
 	//Validaciones();
 	expresionesPostfijas();
-	expected = "9";
+	expected = "9.000000";
 	evaluarPostfijas();
 
 }
@@ -615,6 +620,7 @@ void testCase4() {
 	else {
 
 		expresionesPostfijas();
+		expected = "error!";
 		evaluarPostfijas();
 
 	}
@@ -631,7 +637,7 @@ void testCase5() {
 
 	//Validaciones();
 	expresionesPostfijas();
-	expected = "1";
+	expected = "1.000000";
 	evaluarPostfijas();
 
 }
@@ -656,6 +662,7 @@ void testCase6() {
 	else {
 
 		expresionesPostfijas();
+		expected = "error!";
 		evaluarPostfijas();
 
 	}
@@ -673,7 +680,7 @@ void testCase7() {
 
 	//Validaciones();
 	expresionesPostfijas();
-	expected = "8";
+	expected = "8.000000";
 	evaluarPostfijas();
 
 }
@@ -689,7 +696,7 @@ void testCase8() {
 
 	//Validaciones();
 	expresionesPostfijas();
-	expected = "2";
+	expected = "2.000000";
 	evaluarPostfijas();
 
 }
@@ -707,7 +714,7 @@ void testCase9() {
 
 	//Validaciones();
 	expresionesPostfijas();
-	expected = "0";
+	expected = "0.000000";
 	evaluarPostfijas();
 
 }
@@ -765,6 +772,7 @@ void testCase13(){
 	else {
 
 		expresionesPostfijas();
+		expected = "error!";
 		evaluarPostfijas();
 
 	}
