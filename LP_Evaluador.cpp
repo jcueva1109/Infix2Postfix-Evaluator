@@ -38,9 +38,10 @@ void ingresarExpresion();
 void Validaciones();
 void expresionesPostfijas();
 void evaluarPostfijas();
-int String2int(string, string, int);
-string int2String(int);
+double String2int(string, string, int);
+string int2String(double);
 bool checkInput(string);
+bool checkMod(int, double);
 
 //TEST CASES
 void testCase1();
@@ -136,7 +137,7 @@ int main()
 		Validaciones();
 
 		if (error404 == true) {
-			cout << "Hubo un error en algun lado!" << endl;
+			
 		}
 		else {
 
@@ -213,7 +214,7 @@ void Validaciones() {
 
 	//Validaciones
 	int i = 0, pos = 0, pos2 = 0, izquierdo = 0, derecho = 0;
-	auto error = false, error2 = false, error3 = false;
+	auto error = false, error2 = false, error3 = false, error4 = false;
 
 	while (i < t) {
 
@@ -237,13 +238,23 @@ void Validaciones() {
 			}
 		}
 
-		//Validar caracteres no permitidos	ARREGLAR
+		//Validar caracteres no permitidos
 		if (arreglo[i] == "+" || arreglo[i] == "-" || arreglo[i] == "*" || arreglo[i] == "/" || arreglo[i] == "%" || arreglo[i] == "^" || arreglo[i] == "pi" || arreglo[i] == "(" || arreglo[i] == ")") {
 
 		}
 		else {
 			if (checkInput(arreglo[i]) == true) {
 				error3 = true;
+			}
+			else {
+
+				int modx = stoi(arreglo[i]);
+				double mody = stod(arreglo[i]);
+
+				if (checkMod(modx, mody) == false) {
+					error4 = true;
+				}
+
 			}
 		}
 
@@ -260,15 +271,21 @@ void Validaciones() {
 		error404 = true;
 	}
 
+	if (error3 == true) {
+		cout << "Introdujiste un caracter invalido!" << endl;
+		error404 = true;
+	}
+
+	if (error4 == true) {
+		cout << "No puedes realizar estar operacion con puntos flotantes!" << endl;
+		error404 = true;
+	}
+
 	if (izquierdo > derecho) {
 		cout << "Olvidaste cerrar el parentesis izquierdo '('!" << endl;
 		error404 = true;
 	}
 
-	if (error3 == true) {
-		cout << "Introdujiste un caracter invalido!" << endl;
-		error404 = true;
-	}
 }
 
 void expresionesPostfijas() {
@@ -320,7 +337,8 @@ void expresionesPostfijas() {
 void evaluarPostfijas() {
 
 	cout << endl;
-	auto i = 0, resultado = 0;
+	auto i = 0;
+	auto resultado = 0.0;
 	string x = " ", y = " ", salida = " ";
 
 	do {
@@ -414,11 +432,13 @@ void evaluarPostfijas() {
 	}
 }
 
-int String2int(string x, string y, int operacion) {
+double String2int(string x, string y, int operacion) {
 
-	auto a = 0, j = 0, resultado = 0;
-	a = stoi(x);		//Parsear string a int
-	j = stoi(y);		//Parsear string a int
+	auto a = stod(x);		//Parsear string a double
+	auto j = stod(y);		//Parsear string a double
+	auto resultado = a - a;
+	int b = a;
+	int c = j;
 
 	try {
 
@@ -437,13 +457,10 @@ int String2int(string x, string y, int operacion) {
 			resultado = j / a;
 			break;
 		case 5:		//Es un modulo
-			resultado = j % a;
+			resultado = c % b;
 			break;
 		case 6:		//Es una potencia
 			resultado = pow(j, a);
-			break;
-		case 7:		//pi
-			resultado = 0;
 			break;
 		default:
 			resultado = 0;
@@ -462,7 +479,7 @@ int String2int(string x, string y, int operacion) {
 
 }
 
-string int2String(int n) {
+string int2String(double n) {
 
 	auto s = to_string(n);		
 	return s;
@@ -489,6 +506,17 @@ bool checkInput(string x) {
 	}
 
 	return false;
+}
+
+bool checkMod(int x, double y) {
+
+	if (x == y) {
+		return false;
+	}
+	else {
+		return true;
+	}
+
 }
 
 //Test Cases
