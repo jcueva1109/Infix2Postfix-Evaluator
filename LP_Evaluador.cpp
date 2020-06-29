@@ -10,7 +10,7 @@ using namespace std;
 struct Nodo {
 
 	string dato;
-	Nodo* siguiente = NULL;
+	Nodo* siguiente = nullptr;	//Feature de C++11
 
 };
 
@@ -18,11 +18,15 @@ struct Nodo {
 template <class T>
 constexpr T pi = T(3.1415926535897932385L);	//Variable Template
 
-Nodo* pila = NULL;
+template <class J>
+constexpr J e = J(2.718281828459045235360);
+
+Nodo* pila = nullptr;			//Feature de C++11
 string* arreglo;
 vector <string> holi;
 auto t = 0;					//Feature de C++11
 auto expected = " ";
+auto error404 = false;
 
 //Funciones de la pila
 void agregarPila(Nodo*&, string);
@@ -36,6 +40,7 @@ void expresionesPostfijas();
 void evaluarPostfijas();
 int String2int(string, string, int);
 string int2String(int);
+bool checkInput(string);
 
 //TEST CASES
 void testCase1();
@@ -49,6 +54,8 @@ void testCase8();
 void testCase9();
 void testCase10();
 void testCase11();
+void testCase12();
+void testCase13();
 
 int main()
 {
@@ -77,11 +84,13 @@ int main()
 		cout << "9. 500 - 400 + 100" << endl;	//funciona
 		cout << "10. 100 / 0" << endl;			//no funciona
 		cout << "11. pi(15)^2" << endl;
+		cout << "12. Valor Euler" << endl;
+		cout << "13. j+2+3" << endl;
 		cin >> tc;
 
 		switch (tc) {
 		case 1:
-			testCase1();
+			testCase1();	
 		break;
 		case 2:
 			testCase2();
@@ -97,7 +106,7 @@ int main()
 			break;
 		case 6:
 			testCase6();
-			break;
+		break;
 		case 7:
 			testCase7();
 			break;
@@ -113,13 +122,27 @@ int main()
 		case 11:
 			testCase11();
 			break;
+		case 12:
+			testCase12();
+			break;
+		case 13:
+			testCase13();
+			break;
 		}
 		break;
 		case 2:
+
 			ingresarExpresion();
 			Validaciones();
-			expresionesPostfijas();
-			evaluarPostfijas();
+
+			if (error404 == true) {
+			
+			}
+			else {
+				expresionesPostfijas();
+				evaluarPostfijas();
+			}
+
 			break;
 	case 3:
 		cout << "Hasta pronto!" << endl;
@@ -219,9 +242,16 @@ void Validaciones() {
 		}
 
 		//Validar expresion infija incorrecta
-		if (arreglo[i].size() == i){
+		if ((t-1) == i){
 			if(arreglo[i] == "+" || arreglo[i] == "-" || arreglo[i] == "*" || arreglo[i] == "/" || arreglo[i] == "%" || arreglo[i] == "^" || arreglo[i] == "pi") {
 				error2 = true;
+			}
+			else {
+
+				if (checkInput(arreglo[i]) == true) {
+					error404 = true;
+				}
+
 			}
 		}
 
@@ -230,17 +260,21 @@ void Validaciones() {
 
 	if (error == true) {
 		cout << "No puedes realizar una division entre 0!" << endl;
-		ingresarExpresion();
+		error404 = true;
 	}
 
 	if (error2 == true) {
 		cout << "No puedes terminar una expresion con un operador!" << endl;
-		ingresarExpresion();
+		error404 = true;
 	}
 
 	if (izquierdo > derecho) {
 		cout << "Olvidaste cerrar el parentesis izquierdo '('!" << endl;
-		ingresarExpresion();
+		error404 = true;
+	}
+
+	if (error404 == false) {
+		cout << "Introdujiste un caracter invalido!" << endl;
 	}
 }
 
@@ -260,7 +294,7 @@ void expresionesPostfijas() {
 				holi.push_back(arreglo[i]);
 			}
 		}
-
+	
 		//Botamos el parentesis izquierdo!!
 		if (arreglo[i] == ")") {
 
@@ -390,7 +424,7 @@ int String2int(string x, string y, int operacion) {
 	auto a = 0, j = 0, resultado = 0;
 	a = stoi(x);		//Parsear string a int
 	j = stoi(y);		//Parsear string a int
-
+		
 	try {
 
 		switch (operacion) {
@@ -439,6 +473,21 @@ string int2String(int n) {
 	return s;
 }
 
+bool checkInput(string x) {
+
+	try {
+		int numero = stoi(x);
+	}
+	catch (const invalid_argument& e) {
+		return true;
+	}
+	catch (const out_of_range& e) {
+		return true;
+	}
+
+	return false;
+}
+
 //Test Cases
 /*
 			cout << "1. 10+(1+2)*2" << endl;		//funciona
@@ -451,6 +500,9 @@ string int2String(int n) {
 			cout << "8. 1000/500" << endl;			//funciona
 			cout << "9. 500 - 400 + 100" << endl;	//funciona
 			cout << "10. 100 / 0" << endl;			//no funciona
+			cout << "11. pi(15)^2" << endl;
+			cout << "12. e			<< endl;
+			cout << "13. Caracter Invalido
 */
 
 void testCase1(){
@@ -471,10 +523,13 @@ void testCase1(){
 
 	//Validamos el arreglo
 	Validaciones();
-	expresionesPostfijas();
-	expected = "16";
-	evaluarPostfijas();
 
+	if (!error404) {
+
+		expresionesPostfijas();
+		expected = "16";
+		evaluarPostfijas();
+	}
 }
 
 void testCase2() {
@@ -527,10 +582,16 @@ void testCase4() {
 	arreglo[3] = "+";
 
 	Validaciones();
-	expresionesPostfijas();
-	expected = "error!";
-	evaluarPostfijas();
+	if (error404 == true) {
 
+	}
+	else {
+
+		expresionesPostfijas();
+		expected = "error!";
+		evaluarPostfijas();
+
+	}
 }
 
 void testCase5() {
@@ -562,9 +623,17 @@ void testCase6() {
 	arreglo[5] = "30";
 
 	Validaciones();
-	expresionesPostfijas();
-	expected = "error!";
-	evaluarPostfijas();
+
+	if (error404 == true) {
+
+	}
+	else {
+
+		expresionesPostfijas();
+		expected = "error!";
+		evaluarPostfijas();
+
+	}
 
 }
 
@@ -628,25 +697,52 @@ void testCase10() {
 	arreglo[2] = "0";
 
 	Validaciones();
-	expresionesPostfijas();
-	expected = "error!";
-	evaluarPostfijas();
+
+	if (error404 == true) {
+
+	}
+	else {
+
+		expresionesPostfijas();
+		expected = "error!";
+		evaluarPostfijas();
+
+	}
 
 }
 
 void testCase11() {
 
-	t = 3;
+	cout << "El resultado es de: " <<pi<double> * pow(15, 2);	
+}
+
+void testCase12() {
+
+	cout << "El valor de euler es de: " << e<long double> << endl;
+
+}
+
+void testCase13() {
+
+	t = 5;
 	arreglo = new string[t];
 
-	arreglo[0] = pi<double>;
-	arreglo[1] = "15";
-	arreglo[2] = "^";
-	arreglo[3] = "2";
-
+	arreglo[0] = "j";
+	arreglo[1] = "+";
+	arreglo[2] = "2";
+	arreglo[3] = "+";
+	arreglo[4] = "3";
 	Validaciones();
-	expresionesPostfijas();
-	expected = "707";
-	evaluarPostfijas();
+
+	if (error404 == false) {
+		
+	}
+	else {
+
+		expresionesPostfijas();
+		expected = "error!";
+		evaluarPostfijas();
+
+	}
 
 }
