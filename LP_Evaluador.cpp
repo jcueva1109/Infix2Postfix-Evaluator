@@ -210,13 +210,8 @@ void Validaciones() {
 	cout << endl;
 
 	//Validaciones
-	int i = 0;
-	int pos = 0;
-	int pos2 = 0;
-	int izquierdo = 0;
-	int derecho = 0;
-	bool error = false;
-	bool error2 = false;
+	int i = 0, pos = 0, pos2 = 0, izquierdo = 0, derecho = 0;
+	auto error = false, error2 = false;
 
 	while (i < t){
 
@@ -233,15 +228,7 @@ void Validaciones() {
 		if (arreglo[i] == ")")
 			derecho++;
 
-		//Validar caracteres no permitidos	ARREGLAR
-		if (arreglo[i] == "+" || arreglo[i] == "-" || arreglo[i] == "*" || arreglo[i] == "/" || arreglo[i] == "%" || arreglo[i] == "^" || arreglo[i] == "pi") {
-
-		}
-		else {
-			
-		}
-
-		//Validar expresion infija incorrecta
+		//Validar expresion infija incorrecta y que no termine con un operador
 		if ((t-1) == i){
 			if(arreglo[i] == "+" || arreglo[i] == "-" || arreglo[i] == "*" || arreglo[i] == "/" || arreglo[i] == "%" || arreglo[i] == "^" || arreglo[i] == "pi") {
 				error2 = true;
@@ -327,8 +314,7 @@ void expresionesPostfijas() {
 void evaluarPostfijas() {
 	
 	cout << endl;
-	auto i = 0;
-	auto resultado = 0.0;
+	auto i = 0, resultado = 0;
 	string x = " ", y = " ", salida = " ";
 
 	do {
@@ -370,7 +356,8 @@ void evaluarPostfijas() {
 			salida = int2String(resultado);
 			cout << "El resultado es : " << salida << endl;
 			agregarPila(pila, salida);
-		}else if (holi[i] == "+") {
+		}
+		else if (holi[i] == "+") {
 
 			x = sacarPila(pila, holi[i]);
 			y = sacarPila(pila, holi[i]);
@@ -379,7 +366,8 @@ void evaluarPostfijas() {
 			cout << "El resultado es : " << salida << endl;
 			agregarPila(pila, salida);
 			
-		}else if (holi[i] == "-") {
+		}
+		else if (holi[i] == "-") {
 			
 			x = sacarPila(pila, holi[i]);
 			y = sacarPila(pila, holi[i]);
@@ -388,7 +376,8 @@ void evaluarPostfijas() {
 			cout << "El resultado es : " << salida << endl;
 			agregarPila(pila, salida);
 
-		}else if (holi[i] == "pi") {
+		}
+		else if (holi[i] == "pi") {
 
 			x = sacarPila(pila, holi[i]);
 			y = sacarPila(pila, holi[i]);
