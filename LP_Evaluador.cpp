@@ -67,6 +67,7 @@ int isOpeningBracket(string);
 int isClosingBracket(string);
 int isNumber(string);
 int isOperator(string);
+void reset();
 
 //TEST CASES
 void testCase1();
@@ -184,6 +185,7 @@ int main()
 
 				expresionesPostfijas();
 				evaluarPostfijas();
+				reset();
 
 			}
 
@@ -271,7 +273,7 @@ void Validaciones() {
 			derecho++;
 
 		//Validar que no divida entre 0
-		if (arreglo[i] == "/" || arreglo[i] == "%" && arreglo[i + 1] == "0") {
+		if ((arreglo[i] == "/" || arreglo[i] == "%") && (arreglo[i -1] == "0" || arreglo[i+1] == "0") && (i != t - 1)){
 			error = true;
 		}
 
@@ -339,12 +341,12 @@ void expresionesPostfijas() {
 	auto myString = string();
 	stack<string> string_stack;
 
-	for (i = 0; i < t; i++) {
+	for (i = 0; i < t; i++) {		//recorremos individualmente las posiciones
 
 		myString = arreglo[i];	//temp_storage
 
-		if (isOpeningBracket(myString)) {
-			string_stack.push(myString);
+		if (isOpeningBracket(myString)) {	//Si es un parentesis izquierdo, entra a la pila
+			string_stack.push(myString);	
 		}
 		//Esta cerrando el parentesis
 		else if (isClosingBracket(myString)) {
@@ -363,7 +365,7 @@ void expresionesPostfijas() {
 				string_stack.pop();
 			}
 
-		}
+		}//Si es un numero lo agregamos al resultado
 		else if (isNumber(myString)) {
 			holi.push_back(myString);
 		}
@@ -374,6 +376,7 @@ void expresionesPostfijas() {
 				continue;
 			}
 
+			//Revisamos precedencia
 			if (checkPrecedence(myString, string_stack.top())) {
 				string_stack.push(myString);
 			}
@@ -393,7 +396,16 @@ void expresionesPostfijas() {
 
 		}
 		else {
-			cout << "Invalid Symbols in expressions!!" << endl;
+
+			if (myString == "e") {
+				holi.push_back(myString);
+			}
+			else if (myString == "pi") {
+				holi.push_back(myString);
+			}
+			else {	//Si es un caracter invalido
+				cout << "Ingresaste un caracter invalido!!" << endl;
+			}
 		}
 
 	}	
@@ -481,16 +493,6 @@ void evaluarPostfijas() {
 			agregarPila(pila, salida);
 
 		}
-		else if (holi[i] == "pi") {
-
-			x = sacarPila(pila, holi[i]);
-			y = sacarPila(pila, holi[i]);
-			resultado = String2int(x, y, 0);
-			salida = int2String(resultado);
-			cout << "El resultado es : " << salida << endl;
-			agregarPila(pila, salida);
-
-		}
 		else {
 			agregarPila(pila, holi[i]);
 		}
@@ -514,66 +516,60 @@ void evaluarPostfijas() {
 
 double String2int(string x, string y, int operacion) {
 
-	auto a = stod(x);		//Parsear string a double
-	auto j = stod(y);		//Parsear string a double
-	auto resultado = a - a;
-	int b = a;
-	int c = j;
-
-	auto e = string();
-	auto pi = string();
+	auto x1 = string();
+	auto y1 = string();
 
 	if (x == "e") {
-		e = "2.718281828459045235360";
+		x1 = "2.718'281'828'459'045'235'360";
 	}
 	else if (x == "pi") {
-		pi = "3.1415926535897932385";
+		x1 = "3.141'592'653'589'793'2385";
 	}
 	else {
-		e = x;
+		x1 = x;
 	}
 
 	if (y == "e") {
-		e = "2.718281828459045235360";
+		y1 = "2.718'281'828'459'045'235'360";
 	}
 	else if (y == "pi") {
-		pi = "3.1415926535897932385";
+		y1 = "3.141'592'653'589'793'2385";
 	}
 	else {
-		pi = x;
+		y1 = y;
 	}
+
+	auto xx = stod(x1);
+	auto yy = stod(y1);
+	auto r = xx - xx;
+	int xxx = xx;
+	int yyy = yy;
 
 	try {
 
 		switch (operacion) {
-
-		case 1:		//Es una suma
-			resultado = a + j;
+		case 1:
+			r = xx + yy;
 			break;
-		case 2:		//Es una resta
-			resultado = j - a;
+		case 2:
+			r = yy - xx;
 			break;
-		case 3:		//Es una multiplicacion
-			resultado = a * j;
+		case 3:
+			r = xx * yy;
 			break;
-		case 4:		//Es una division
-			resultado = j / a;
+		case 4:
+			r = yy / xx;
 			break;
-		case 5:		//Es un modulo
-			resultado = c % b;
+		case 5:
+			r = yyy % xxx;
 			break;
-		case 6:		//Es una potencia
-			resultado = pow(j, a);
-			break;
-		case 7:		//Constante pi
-			resultado = stod(pi);
-			break;
-		case 8:		//Constante e
-			resultado = stod(e);
+		case 6:
+			r = pow(yy, xx);
 			break;
 		default:
-			resultado = 0;
+			r = 0;
 			break;
+
 		}
 
 	}
@@ -583,9 +579,7 @@ double String2int(string x, string y, int operacion) {
 	catch (out_of_range const& e) {
 		cout << "Integer overflow: out_of_range thrown" << '\n';
 	}
-
-	return resultado;
-
+	return r;
 }
 
 string int2String(double n) {
@@ -596,6 +590,7 @@ string int2String(double n) {
 }
 
 //Feature de C++14 Lambda Function
+//[[deprecated]]
 auto int2String2 = [](double n) {
 
 	string s = string();
@@ -653,14 +648,17 @@ int checkPrecedence(string fx, string sy) {
 	return (precedenceValue(fx) > precedenceValue(sy));
 }
 
+//Check wether the given character is an opening bracket or not
 int isOpeningBracket(string x) {
 	return (x == "(");
 }
 
+//Check wether the given character is a closing bracket or not
 int isClosingBracket(string x) {
 	return (x == ")");
 }
 
+//Check whether the given character is a number or not
 int isNumber(string x) {
 	
 	int numero = 0;
@@ -679,9 +677,16 @@ int isNumber(string x) {
 
 }
 
+//Check wether the character is operator or not
 int isOperator(string x) {
 
 	return (x == "+" || x == "-" || x == "*" || x == "/" || x == "^");
+
+}
+
+void reset() {
+
+	
 
 }
 
@@ -889,27 +894,7 @@ void testCase10() {
 
 void testCase11() {
 
-	t = 12;
-	arreglo = new string[t];
-
-	arreglo[0] = "(";
-	arreglo[1] = "e";
-	arreglo[2] = "+";
-	arreglo[3] = "pi";
-	arreglo[4] = ")";
-	arreglo[5] = "*";
-	arreglo[6] = "e";
-	arreglo[7] = "/";
-	arreglo[8] = "pi";
-	arreglo[9] = "^";
-	arreglo[10] = "2";
-	arreglo[11] = "-";
-	arreglo[12] = "4";
-
-	Validaciones();
-	expresionesPostfijas();
-	expected = "2.000000";
-	evaluarPostfijas();
+	cout << pi<double> * pow(15, 2) << endl;
 
 }
 
