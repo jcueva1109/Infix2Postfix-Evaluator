@@ -4,30 +4,45 @@
 #include <math.h>		//Para la potencia
 #include <string>
 #include <vector>
+#include <stack>
 using namespace std;
 
 struct Nodo {
 
 	string dato;
-	Nodo* siguiente;	//Feature de C++11
-		
+	Nodo* siguiente;
 	Nodo() : siguiente(nullptr) {}	//Feature de C++11
 
 };
 
+//Feature de C++17
+namespace X {
+
+	string bienvenida = "Bienvenido a mi proyecto!";
+	string despedida = "Hasta Pronto!";
+}
+
 //Feature de C++14
 template <class T>
-constexpr T pi = T(3.14'159'265'358'979'323'85L);		//Feature de C++14
+inline T pi = T(3.14'159'265'358'979'323'85L);		//Feature de C++14
+//Feature de C++17
 
 //Feature de C++14
 template <class J>
-constexpr J e = J(2.718'281'828'459'045'235'360);		//Feature de C++14
+inline J e = J(2.718'281'828'459'045'235'360);		//Feature de C++14
+//Feature de C++17
 
-Nodo* pila = nullptr;			//Feature de C++11
+//Feature de C++17
+template<typename ...Args>
+void print(Args&& ... args) {
+	(std::cout << ... << args) << '\n';
+}
+
+Nodo* pila = nullptr;			//Feature de C++11	
 string* arreglo;
 vector <string> holi;
 auto t = 0;					//Feature de C++11
-auto expected = " ";
+auto expected = "";
 auto error404 = false;
 
 //Funciones de la pila
@@ -44,6 +59,14 @@ double String2int(string, string, int);
 string int2String(double);
 bool checkInput(string);
 bool checkMod(int, double);
+
+//Funciones AUX2
+int precedenceValue(string);
+int checkPrecedence(string, string);
+int isOpeningBracket(string);
+int isClosingBracket(string);
+int isNumber(string);
+int isOperator(string);
 
 //TEST CASES
 void testCase1();
@@ -65,7 +88,7 @@ int main()
 
 	auto opcion = 0, tc = 0;
 
-	cout << "Bienvenido!" << endl;
+	cout << X::bienvenida<< endl;
 	cout << "Que quieres hacer?" << endl;
 	cout << "1. Correr test cases" << endl;
 	cout << "2. Ejecutar programa" << endl;
@@ -84,7 +107,7 @@ int main()
 		cout << "6. (10+20+30" << endl;		//no funciona
 		cout << "7. 2^3" << endl;				//funciona
 		cout << "8. 1000/500" << endl;			//funciona
-		cout << "9. 500 - 400 + 100" << endl;	//funciona
+		cout << "9. 30 + 15 - 25" << endl;	//funciona
 		cout << "10. 100 / 0" << endl;			//no funciona
 		cout << "11. pi(15)^2" << endl;
 		cout << "12. Valor Euler" << endl;
@@ -94,49 +117,63 @@ int main()
 		switch (tc) {
 		case 1:
 			testCase1();
+			//Feature de C++17
+			[[fallthrough]];	//Probando test case
 			break;
 		case 2:
 			testCase2();
+			[[fallthrough]];	//Probando test case
 			break;
 		case 3:
 			testCase3();
+			[[fallthrough]];	//Probando test case
 			break;
 		case 4:
 			testCase4();
+			[[fallthrough]] ;	//Probando test case
 			break;
 		case 5:
 			testCase5();
+			[[fallthrough]] ;	//Probando test case
 			break;
 		case 6:
 			testCase6();
+			[[fallthrough]] ;	//Probando test case
 			break;
 		case 7:
 			testCase7();
+			[[fallthrough]] ;	//Probando test case
 			break;
 		case 8:
 			testCase8();
+			[[fallthrough]] ;	//Probando test case
 			break;
 		case 9:
 			testCase9();
+			[[fallthrough]] ;	//Probando test case
 			break;
 		case 10:
 			testCase10();
+			[[fallthrough]] ;	//Probando test case
 			break;
 		case 11:
 			testCase11();
+			[[fallthrough]] ;	//Probando test case
 			break;
 		case 12:
 			testCase12();
+			[[fallthrough]] ;	//Probando test case
 			break;
 		case 13:
 			testCase13();
-			break;
+			[[fallthrough]] ;	//Probando test case
+			break;	
 		}
 		break;
 	case 2:
 
 		ingresarExpresion();
-		Validaciones();
+		//Validaciones();
 
 		if (error404 == true) {
 			
@@ -150,7 +187,8 @@ int main()
 
 		break;
 	case 3:
-		cout << "Hasta pronto!" << endl;
+		cout << X::despedida << endl;
+		break;
 	}
 
 	system("pause > null");
@@ -293,47 +331,82 @@ void Validaciones() {
 
 void expresionesPostfijas() {
 
-	string omitir[10];		//Aqui agrego el parentesis izquierdo que omito
 
-	//Llenamos el arreglo y la pila
-	for (int i = 0; i < t; i++) {
+	int i;
+	string myString = " ", postfix = " ";
+	stack<string> string_stack;
 
-		//Agregamos los operadores a la pila
-		if (arreglo[i] == "(" || arreglo[i] == "^" || arreglo[i] == "*" || arreglo[i] == "/" || arreglo[i] == "%" || arreglo[i] == "+" || arreglo[i] == "-" || arreglo[i] == "pi") {
-			agregarPila(pila, arreglo[i]);
+	for (i = 0; i < t; i++) {
+
+		myString = arreglo[i];	//temp_storage
+
+		if (isOpeningBracket(myString)) {
+			string_stack.push(myString);
 		}
-		else {		//Agregamos los numeros al arreglo
-			if (arreglo[i] != ")") {
-				holi.push_back(arreglo[i]);
+		//Esta cerrando el parentesis
+		else if (isClosingBracket(myString)) {
+
+			//1. saca los elementos hasta que se encuentre el parentesis izquierdo
+			while (!isOpeningBracket(string_stack.top())){
+
+				holi.push_back(string_stack.top());
+				string_stack.pop();
+				if (string_stack.empty())	break;
+
 			}
-		}
 
-		//Botamos el parentesis izquierdo!!
-		if (arreglo[i] == ")") {
-
-			do {
-
-				holi.push_back(sacarPila(pila, arreglo[i]));
-				omitir[i] = sacarPila(pila, arreglo[i]);
-				break;
-
-			} while (arreglo[i] != "(");
+			//2. Sacando el parentesis izquierdo
+			if (!string_stack.empty()) {
+				string_stack.pop();
+			}
 
 		}
-	}
+		else if (isNumber(myString)) {
+			holi.push_back(myString);
+		}
+		else if (isOperator(myString)) {
+
+			if (string_stack.empty() || isOpeningBracket(string_stack.top())) {
+				string_stack.push(myString);
+				continue;
+			}
+
+			if (checkPrecedence(myString, string_stack.top())) {
+				string_stack.push(myString);
+			}
+			else {
+
+				while (!isOpeningBracket(string_stack.top())) {
+
+					holi.push_back(string_stack.top());
+					string_stack.pop();
+					if (string_stack.empty())	break;
+
+				}
+
+				string_stack.push(myString);
+
+			}
+
+		}
+		else {
+			cout << "Invalid Symbols in expressions!!" << endl;
+		}
+
+	}	
 
 	//Vaciamos la pila
-	for (int i = 0; i < holi.size(); i++) {
-		if (pila != NULL) {
+	while (!string_stack.empty()) {
 
-			holi.push_back(sacarPila(pila, arreglo[i]));
+		holi.push_back(string_stack.top());
+		string_stack.pop();
 
-		}
 	}
 
+	//Feature de C++17
 	cout << "Imprimiendo resultado final..." << endl;
 	for (int dim = 0; dim < holi.size(); dim++) {
-		cout << "[" << dim << "]" << holi[dim] << endl;
+		print("[" ,dim,"] ",holi[dim]);
 	}
 
 }
@@ -491,9 +564,10 @@ string int2String(double n) {
 }
 
 //Feature de C++14 Lambda Function
-auto int2String2 = [](int n) {
+auto int2String2 = [](double n) {
 
-	auto s = to_string(n);
+	string s = string();
+	s = to_string(n);
 	return s;
 
 };
@@ -524,22 +598,60 @@ bool checkMod(int x, double y) {
 
 }
 
-//Test Cases
-/*
-			cout << "1. 10+(1+2)*2" << endl;		//funciona
-			cout << "2. 1+2*3" << endl;			//funciona
-			cout << "3. (1+2)*3" << endl;			//funciona
-			cout << "4. 10+5+" << endl;			//no funciona
-			cout << "5. 4%3" << endl;				//funciona
-			cout << "6. (10+20+30" << endl;		//no funciona
-			cout << "7. 2^3" << endl;				//funciona
-			cout << "8. 1000/500" << endl;			//funciona
-			cout << "9. 500 - 400 + 100" << endl;	//funciona
-			cout << "10. 100 / 0" << endl;			//no funciona
-			cout << "11. pi(15)^2" << endl;			//funciona
-			cout << "12. e			<< endl;		//funciona
-			cout << "13. Caracter Invalido			//no funciona
-*/
+/*Give the precedence value of the character or operator*/
+int precedenceValue(string x) {
+
+	if (x == "^") {
+		return 3;
+	}
+	else if (x == "*" || x == "/" || x == "%") {
+		return 2;
+	}
+	else if (x == "+" || x == "-") {
+		return 1;
+	}
+	else {
+		return 0;
+	}
+
+}
+
+/*If precedence of the first operator is greater than other then return true else return false*/
+int checkPrecedence(string fx, string sy) {
+	return (precedenceValue(fx) > precedenceValue(sy));
+}
+
+int isOpeningBracket(string x) {
+	return (x == "(");
+}
+
+int isClosingBracket(string x) {
+	return (x == ")");
+}
+
+int isNumber(string x) {
+	
+	int numero = 0;
+
+	try {
+		numero = stoi(x);
+	}
+	catch (const invalid_argument & e) {
+		return 0;
+	}
+	catch (const out_of_range & e) {
+		return 0;
+	}
+
+	return numero;
+
+}
+
+int isOperator(string x) {
+
+	return (x == "+" || x == "-" || x == "*" || x == "/" || x == "^");
+
+}
 
 void testCase1() {
 
@@ -560,7 +672,7 @@ void testCase1() {
 	//Validamos el arreglo
 	Validaciones();
 	expresionesPostfijas();
-	expected = "16.000000";
+	expected = "10.000000";
 	evaluarPostfijas();
 }
 
@@ -706,15 +818,15 @@ void testCase9() {
 	t = 5;
 	arreglo = new string[t];
 
-	arreglo[0] = "500";
-	arreglo[1] = "-";
-	arreglo[2] = "400";
-	arreglo[3] = "+";
-	arreglo[4] = "100";
+	arreglo[0] = "30";
+	arreglo[1] = "+";
+	arreglo[2] = "15";
+	arreglo[3] = "-";
+	arreglo[4] = "25";
 
 	//Validaciones();
 	expresionesPostfijas();
-	expected = "0.000000";
+	expected = "20.000000";
 	evaluarPostfijas();
 
 }
