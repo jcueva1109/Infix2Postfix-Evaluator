@@ -88,107 +88,111 @@ int main()
 
 	auto opcion = 0, tc = 0;
 
-	cout << X::bienvenida<< endl;
-	cout << "Que quieres hacer?" << endl;
-	cout << "1. Correr test cases" << endl;
-	cout << "2. Ejecutar programa" << endl;
-	cout << "3. Salir" << endl;
-	cin >> opcion;
+	while (opcion != 3) {
 
-	switch (opcion) {
-	case 1:
+		cout << X::bienvenida << endl;
+		cout << "Que quieres hacer?" << endl;
+		cout << "1. Correr test cases" << endl;
+		cout << "2. Ejecutar programa" << endl;
+		cout << "3. Salir" << endl;
+		cin >> opcion;
 
-		cout << "Selecciona el test case a ejecutar: " << endl;
-		cout << "1. 10+(1+2)*2" << endl;		//funciona
-		cout << "2. 1+2*3" << endl;			//funciona
-		cout << "3. (1+2)*3" << endl;			//funciona
-		cout << "4. 10+5+" << endl;			//no funciona
-		cout << "5. 4%3" << endl;				//funciona
-		cout << "6. (10+20+30" << endl;		//no funciona
-		cout << "7. 2^3" << endl;				//funciona
-		cout << "8. 1000/500" << endl;			//funciona
-		cout << "9. 30 + 15 - 25" << endl;	//funciona
-		cout << "10. 100 / 0" << endl;			//no funciona
-		cout << "11. pi(15)^2" << endl;
-		cout << "12. Valor Euler" << endl;
-		cout << "13. j+2+3" << endl;
-		cin >> tc;
-
-		switch (tc) {
+		switch (opcion) {
 		case 1:
-			testCase1();
-			//Feature de C++17
-			[[fallthrough]];	//Probando test case
+
+			cout << "Selecciona el test case a ejecutar: " << endl;
+			cout << "1. 10+(1+2)*2" << endl;		//funciona
+			cout << "2. 1+2*3" << endl;			//funciona
+			cout << "3. (1+2)*3" << endl;			//funciona
+			cout << "4. 10+5+" << endl;			//no funciona
+			cout << "5. 4%3" << endl;				//funciona
+			cout << "6. (10+20+30" << endl;		//no funciona
+			cout << "7. 2^3" << endl;				//funciona
+			cout << "8. 1000/500" << endl;			//funciona
+			cout << "9. 30 + 15 - 25" << endl;	//funciona
+			cout << "10. 100 / 0" << endl;			//no funciona
+			cout << "11. pi(15)^2" << endl;
+			cout << "12. Valor Euler" << endl;
+			cout << "13. j+2+3" << endl;
+			cin >> tc;
+
+			switch (tc) {
+			case 1:
+				testCase1();
+				//Feature de C++17
+				[[fallthrough]] ;	//Probando test case
+				break;
+			case 2:
+				testCase2();
+				[[fallthrough]] ;	//Probando test case
+				break;
+			case 3:
+				testCase3();
+				[[fallthrough]] ;	//Probando test case
+				break;
+			case 4:
+				testCase4();
+				[[fallthrough]] ;	//Probando test case
+				break;
+			case 5:
+				testCase5();
+				[[fallthrough]] ;	//Probando test case
+				break;
+			case 6:
+				testCase6();
+				[[fallthrough]] ;	//Probando test case
+				break;
+			case 7:
+				testCase7();
+				[[fallthrough]] ;	//Probando test case
+				break;
+			case 8:
+				testCase8();
+				[[fallthrough]] ;	//Probando test case
+				break;
+			case 9:
+				testCase9();
+				[[fallthrough]] ;	//Probando test case
+				break;
+			case 10:
+				testCase10();
+				[[fallthrough]] ;	//Probando test case
+				break;
+			case 11:
+				testCase11();
+				[[fallthrough]] ;	//Probando test case
+				break;
+			case 12:
+				testCase12();
+				[[fallthrough]] ;	//Probando test case
+				break;
+			case 13:
+				testCase13();
+				[[fallthrough]] ;	//Probando test case
+				break;
+			}
 			break;
 		case 2:
-			testCase2();
-			[[fallthrough]];	//Probando test case
+
+			ingresarExpresion();
+			Validaciones();
+
+			if (error404 == true) {
+
+			}
+			else {
+
+				expresionesPostfijas();
+				evaluarPostfijas();
+
+			}
+
 			break;
 		case 3:
-			testCase3();
-			[[fallthrough]];	//Probando test case
+			cout << X::despedida << endl;
 			break;
-		case 4:
-			testCase4();
-			[[fallthrough]] ;	//Probando test case
-			break;
-		case 5:
-			testCase5();
-			[[fallthrough]] ;	//Probando test case
-			break;
-		case 6:
-			testCase6();
-			[[fallthrough]] ;	//Probando test case
-			break;
-		case 7:
-			testCase7();
-			[[fallthrough]] ;	//Probando test case
-			break;
-		case 8:
-			testCase8();
-			[[fallthrough]] ;	//Probando test case
-			break;
-		case 9:
-			testCase9();
-			[[fallthrough]] ;	//Probando test case
-			break;
-		case 10:
-			testCase10();
-			[[fallthrough]] ;	//Probando test case
-			break;
-		case 11:
-			testCase11();
-			[[fallthrough]] ;	//Probando test case
-			break;
-		case 12:
-			testCase12();
-			[[fallthrough]] ;	//Probando test case
-			break;
-		case 13:
-			testCase13();
-			[[fallthrough]] ;	//Probando test case
-			break;	
-		}
-		break;
-	case 2:
-
-		ingresarExpresion();
-		//Validaciones();
-
-		if (error404 == true) {
-			
-		}
-		else {
-
-			expresionesPostfijas();
-			evaluarPostfijas();
-
 		}
 
-		break;
-	case 3:
-		cout << X::despedida << endl;
-		break;
 	}
 
 	system("pause > null");
@@ -273,13 +277,13 @@ void Validaciones() {
 
 		//Validar expresion infija incorrecta
 		if ((t - 1) == i) {
-			if (arreglo[i] == "+" || arreglo[i] == "-" || arreglo[i] == "*" ||arreglo[i] == "/" || arreglo[i] == "%" || arreglo[i] == "^" || arreglo[i] == "pi") {
+			if (arreglo[i] == "+" || arreglo[i] == "-" || arreglo[i] == "*" ||arreglo[i] == "/" || arreglo[i] == "%" || arreglo[i] == "^") {
 				error2 = true;
 			}
 		}
 
 		//Validar caracteres no permitidos
-		if (arreglo[i] == "+" || arreglo[i] == "-" || arreglo[i] == "*" || arreglo[i] == "/" || arreglo[i] == "%" || arreglo[i] == "^" || arreglo[i] == "pi" || arreglo[i] == "(" || arreglo[i] == ")") {
+		if (arreglo[i] == "+" || arreglo[i] == "-" || arreglo[i] == "*" || arreglo[i] == "/" || arreglo[i] == "%" || arreglo[i] == "^" || arreglo[i] == "pi" || arreglo[i] == "(" || arreglo[i] == ")" || arreglo[i] == "e") {
 
 		}
 		else {
@@ -331,9 +335,8 @@ void Validaciones() {
 
 void expresionesPostfijas() {
 
-
-	int i;
-	string myString = " ", postfix = " ";
+	auto i = 0;
+	auto myString = string();
 	stack<string> string_stack;
 
 	for (i = 0; i < t; i++) {
@@ -517,6 +520,29 @@ double String2int(string x, string y, int operacion) {
 	int b = a;
 	int c = j;
 
+	auto e = string();
+	auto pi = string();
+
+	if (x == "e") {
+		e = "2.718281828459045235360";
+	}
+	else if (x == "pi") {
+		pi = "3.1415926535897932385";
+	}
+	else {
+		e = x;
+	}
+
+	if (y == "e") {
+		e = "2.718281828459045235360";
+	}
+	else if (y == "pi") {
+		pi = "3.1415926535897932385";
+	}
+	else {
+		pi = x;
+	}
+
 	try {
 
 		switch (operacion) {
@@ -538,6 +564,12 @@ double String2int(string x, string y, int operacion) {
 			break;
 		case 6:		//Es una potencia
 			resultado = pow(j, a);
+			break;
+		case 7:		//Constante pi
+			resultado = stod(pi);
+			break;
+		case 8:		//Constante e
+			resultado = stod(e);
 			break;
 		default:
 			resultado = 0;
@@ -575,7 +607,7 @@ auto int2String2 = [](double n) {
 bool checkInput(string x) {
 
 	try {
-		int numero = stoi(x);
+		int numero = stod(x);
 	}
 	catch (const invalid_argument & e) {
 		return true;
@@ -672,7 +704,7 @@ void testCase1() {
 	//Validamos el arreglo
 	Validaciones();
 	expresionesPostfijas();
-	expected = "10.000000";
+	expected = "16.000000";
 	evaluarPostfijas();
 }
 
@@ -857,7 +889,28 @@ void testCase10() {
 
 void testCase11() {
 
-	cout << "El resultado es de: " << pi<double> * pow(15, 2);
+	t = 12;
+	arreglo = new string[t];
+
+	arreglo[0] = "(";
+	arreglo[1] = "e";
+	arreglo[2] = "+";
+	arreglo[3] = "pi";
+	arreglo[4] = ")";
+	arreglo[5] = "*";
+	arreglo[6] = "e";
+	arreglo[7] = "/";
+	arreglo[8] = "pi";
+	arreglo[9] = "^";
+	arreglo[10] = "2";
+	arreglo[11] = "-";
+	arreglo[12] = "4";
+
+	Validaciones();
+	expresionesPostfijas();
+	expected = "2.000000";
+	evaluarPostfijas();
+
 }
 
 void testCase12() {
