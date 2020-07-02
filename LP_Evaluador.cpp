@@ -11,37 +11,37 @@ struct Nodo {
 
 	string dato;
 	Nodo* siguiente;
-	Nodo() : siguiente(nullptr) {}	//Feature de C++11
+	Nodo() : siguiente(nullptr) {}	//Feature de C++11	Uniform Initialization Syntax
 
 };
 
-//Feature de C++17
+//Feature de C++17	Namespace: Permite la especializacion de funciones y el versionamiento de procesos
 namespace X {
 
 	string bienvenida = "Bienvenido a mi proyecto!";
 	string despedida = "Hasta Pronto!";
 }
 
-//Feature de C++14
+//Feature de C++14	Agrupacion de digitos, se utiliza como separador de millares
 template <class T>
-inline T pi = T(3.14'159'265'358'979'323'85L);		//Feature de C++14
-//Feature de C++17
+inline T pi = T(3.14'159'265'358'979'323'85L);		//Feature de C++14	Plantillas variables Permite leer una misma variable en diferentes tipos
+//Feature de C++17	Inline variables: se usan para declarar y definir variables estaticas
 
-//Feature de C++14
+//Feature de C++14	Agrupacion de digitos, se utiliza como separador de millares
 template <class J>
-inline J e = J(2.718'281'828'459'045'235'360);		//Feature de C++14
-//Feature de C++17
+inline J e = J(2.718'281'828'459'045'235'360);		//Feature de C++14	Plantillas variables Permite leer una misma variable en diferentes tipos
+//Feature de C++17 
 
-//Feature de C++17
+//Feature de C++17	Imprime todos los parametros que recibe
 template<typename ...Args>
 void print(Args&& ... args) {
 	(std::cout << ... << args) << '\n';
 }
 
-Nodo* pila = nullptr;			//Feature de C++11	
+Nodo* pila = nullptr;			//Feature de C++11	 nullptr
 string* arreglo;
 vector <string> holi;
-auto t = 0;					//Feature de C++11
+auto t = 0;					//Feature de C++11		auto declare type
 auto expected = "";
 auto error404 = false;
 
@@ -61,12 +61,12 @@ bool checkInput(string);
 bool checkMod(int, double);
 
 //Funciones AUX2
-int precedenceValue(string);
-int checkPrecedence(string, string);
-int isOpeningBracket(string);
-int isClosingBracket(string);
-int isNumber(string);
-int isOperator(string);
+int valorPrecedencia(string);
+int validarPrecedencia(string, string);
+int parentesisIzquierdo(string);
+int parentesisDerecho(string);
+int esNumero(string);
+int esOperador(string);
 void reset();
 
 //TEST CASES
@@ -120,55 +120,68 @@ int main()
 			switch (tc) {
 			case 1:
 				testCase1();
+				reset();
 				//Feature de C++17
-				[[fallthrough]] ;	//Probando test case
+				[[fallthrough]] ;	//Probando test case	Indica que se tienen que ejecutar los cases 
 				break;
 			case 2:
 				testCase2();
+				reset();
 				[[fallthrough]] ;	//Probando test case
 				break;
 			case 3:
 				testCase3();
+				reset();
 				[[fallthrough]] ;	//Probando test case
 				break;
 			case 4:
 				testCase4();
+				reset();
 				[[fallthrough]] ;	//Probando test case
 				break;
 			case 5:
 				testCase5();
+				reset();
 				[[fallthrough]] ;	//Probando test case
 				break;
 			case 6:
 				testCase6();
+				reset();
 				[[fallthrough]] ;	//Probando test case
 				break;
 			case 7:
 				testCase7();
+				reset();
 				[[fallthrough]] ;	//Probando test case
 				break;
 			case 8:
 				testCase8();
+				reset();
 				[[fallthrough]] ;	//Probando test case
 				break;
 			case 9:
 				testCase9();
+				reset();
 				[[fallthrough]] ;	//Probando test case
 				break;
 			case 10:
 				testCase10();
+				reset();
 				[[fallthrough]] ;	//Probando test case
 				break;
 			case 11:
 				testCase11();
+				reset();
 				[[fallthrough]] ;	//Probando test case
 				break;
 			case 12:
 				testCase12();
+				reset();
 				[[fallthrough]] ;	//Probando test case
 				break;
 			case 13:
 				testCase13();
+				reset();
 				[[fallthrough]] ;	//Probando test case
 				break;
 			}
@@ -260,7 +273,7 @@ void Validaciones() {
 
 	//Validaciones
 	int i = 0, pos = 0, pos2 = 0, izquierdo = 0, derecho = 0;
-	auto error = false, error2 = false, error3 = false, error4 = false;
+	auto error = false, error2 = false, error3 = false, error4 = false, error5 = false;
 
 	while (i < t) {
 
@@ -282,6 +295,10 @@ void Validaciones() {
 			if (arreglo[i] == "+" || arreglo[i] == "-" || arreglo[i] == "*" ||arreglo[i] == "/" || arreglo[i] == "%" || arreglo[i] == "^") {
 				error2 = true;
 			}
+		}
+
+		if (arreglo[0] == "+" || arreglo[0] == "-" || arreglo[0] == "*" || arreglo[0] == "/" || arreglo[0] == "%" || arreglo[0] == "^") {
+			error5 = true;
 		}
 
 		//Validar caracteres no permitidos
@@ -323,10 +340,10 @@ void Validaciones() {
 		error404 = true;
 	}
 
-	/*if (error4 == true) {
-		cout << "No puedes realizar estar operacion con puntos flotantes!" << endl;
+	if (error5 == true) {
+		cout << "No puedes empezar una expresion con un operador!" << endl;
 		error404 = true;
-	}*/
+	}
 
 	if (izquierdo > derecho) {
 		cout << "Olvidaste cerrar el parentesis izquierdo '('!" << endl;
@@ -345,14 +362,14 @@ void expresionesPostfijas() {
 
 		myString = arreglo[i];	//temp_storage
 
-		if (isOpeningBracket(myString)) {	//Si es un parentesis izquierdo, entra a la pila
+		if (parentesisIzquierdo(myString)) {	//Si es un parentesis izquierdo, entra a la pila
 			string_stack.push(myString);	
 		}
 		//Esta cerrando el parentesis
-		else if (isClosingBracket(myString)) {
+		else if (parentesisDerecho(myString)) {
 
 			//1. saca los elementos hasta que se encuentre el parentesis izquierdo
-			while (!isOpeningBracket(string_stack.top())){
+			while (!parentesisIzquierdo(string_stack.top())){
 
 				holi.push_back(string_stack.top());
 				string_stack.pop();
@@ -366,23 +383,23 @@ void expresionesPostfijas() {
 			}
 
 		}//Si es un numero lo agregamos al resultado
-		else if (isNumber(myString)) {
+		else if (esNumero(myString)) {
 			holi.push_back(myString);
 		}
-		else if (isOperator(myString)) {
+		else if (esOperador(myString)) {
 
-			if (string_stack.empty() || isOpeningBracket(string_stack.top())) {
+			if (string_stack.empty() || parentesisIzquierdo(string_stack.top())) {
 				string_stack.push(myString);
 				continue;
 			}
 
 			//Revisamos precedencia
-			if (checkPrecedence(myString, string_stack.top())) {
+			if (validarPrecedencia(myString, string_stack.top())) {
 				string_stack.push(myString);
 			}
 			else {
 
-				while (!isOpeningBracket(string_stack.top())) {
+				while (!parentesisIzquierdo(string_stack.top())) {
 
 					holi.push_back(string_stack.top());
 					string_stack.pop();
@@ -512,6 +529,9 @@ void evaluarPostfijas() {
 	else {
 		cout << "Test case fallido!" << endl;
 	}
+
+	system("pause > null");
+	system("cls");
 }
 
 double String2int(string x, string y, int operacion) {
@@ -584,13 +604,14 @@ double String2int(string x, string y, int operacion) {
 
 string int2String(double n) {
 
-	string s = string();		//Feature de C++11
+	string s = string();		//Feature de C++11		Uniform Initialization Syntax
 	s = to_string(n);		
 	return s;
 }
 
 //Feature de C++14 Lambda Function
-//[[deprecated]]
+[[deprecated]]				//Feature de C++14	Atributo Deprecated 
+/*Se puede utilizar pero notifica a los usuarios que su uso no se recomienda*/
 auto int2String2 = [](double n) {
 
 	string s = string();
@@ -626,7 +647,7 @@ bool checkMod(int x, double y) {
 }
 
 /*Give the precedence value of the character or operator*/
-int precedenceValue(string x) {
+int valorPrecedencia(string x) {
 
 	if (x == "^") {
 		return 3;
@@ -644,22 +665,22 @@ int precedenceValue(string x) {
 }
 
 /*If precedence of the first operator is greater than other then return true else return false*/
-int checkPrecedence(string fx, string sy) {
-	return (precedenceValue(fx) > precedenceValue(sy));
+int validarPrecedencia(string fx, string sy) {
+	return (valorPrecedencia(fx) > valorPrecedencia(sy));
 }
 
 //Check wether the given character is an opening bracket or not
-int isOpeningBracket(string x) {
+int parentesisIzquierdo(string x) {
 	return (x == "(");
 }
 
 //Check wether the given character is a closing bracket or not
-int isClosingBracket(string x) {
+int parentesisDerecho(string x) {
 	return (x == ")");
 }
 
 //Check whether the given character is a number or not
-int isNumber(string x) {
+int esNumero(string x) {
 	
 	int numero = 0;
 
@@ -678,7 +699,7 @@ int isNumber(string x) {
 }
 
 //Check wether the character is operator or not
-int isOperator(string x) {
+int esOperador(string x) {
 
 	return (x == "+" || x == "-" || x == "*" || x == "/" || x == "^");
 
@@ -686,7 +707,7 @@ int isOperator(string x) {
 
 void reset() {
 
-	
+	holi.clear();
 
 }
 
